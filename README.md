@@ -29,6 +29,11 @@ I will continue to update this project regularly if there are additional monster
 
 You can also visit me if you want to get acquainted or thank me for making this killing count, hopefully you can continue to stream and get a lot of viewers, cheers!!!
 
+## Tutorial how to download MH:Wilds Killing Count
+1. Go to the [release page](https://github.com/NinaClaymore/MHWildsKillCount/releases).
+2. Download the source code.
+3. Extract the file and put somewhere you want.
+
 ## Tutorial to using MH:Wilds Killing Count
 1. Put MH-Wilds Kill Counter folder anywhere you want
 2. Open OBS
