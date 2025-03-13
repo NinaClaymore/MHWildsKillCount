@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monster Hunter Counter</title>
+    <style>
+      body {
+        background-color: #1e1e1e;
+        font-family: "Arial", sans-serif;
+      }
+      .widget {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        transition: transform 0.3s ease;
+      }
+      .monster-icon {
+        width: 120px;
+        height: 120px;
+        margin-right: 24px;
+        border-radius: 12px;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        transition: background-image 0.3s ease;
+      }
+      .monster-name {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #f5f5f5;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+      }
+      .counter {
+        font-size: 48px;
+        color: #f39c12;
+        font-weight: bold;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+      }
+    </style>
+  </head>
+  <body class="flex justify-center items-center h-screen bg-gray-900">
+    <div class="widget">
+      <div class="monster-icon" id="monster-icon"></div>
+      <div class="details">
+        <div class="monster-name" id="monster-name">Monsters Hunted</div>
+        <div class="counter" id="counter">0</div>
+      </div>
+    </div>
+
+    <script>
+      const monsters = [
+        { name: "Monsters", image: "images/MHWilds-Chapter1-0_Unknown_Monster_Icon.png" },
+        { name: "Balahara", image: "images/MHWilds-Chapter1-Balahara_Icon.png" },
+        { name: "Chatacabra", image: "images/MHWilds-Chapter1-Chatacabra_Icon.png" },
+        { name: "Congalala", image: "images/MHWilds-Chapter1-Congalala_Icon.png" },
+		{ name: "Doshaguma", image: "images/MHWilds-Chapter1-Doshaguma_Icon.png" },
+		{ name: "Lala Barina", image: "images/MHWilds-Chapter1-Lala_Barina_Icon.png" },
+		{ name: "Quematrice", image: "images/MHWilds-Chapter1-Quematrice_Icon.png" },
+		{ name: "Uth Duna", image: "images/MHWilds-Chapter1-Uth_Duna_Icon.png" },
+		{ name: "Ajarakan", image: "images/MHWilds-Chapter2-Ajarakan_Icon.png" },
+		{ name: "Hirabami", image: "images/MHWilds-Chapter2-Hirabami_Icon.png" },
+		{ name: "Nerscylla", image: "images/MHWilds-Chapter2-Nerscylla_Icon.png" },
+		{ name: "Nu Udra", image: "images/MHWilds-Chapter2-Nu_Udra_Icon.png" },
+		{ name: "Rey Dau", image: "images/MHWilds-Chapter2-Rey_Dau_Icon.png" },
+        { name: "Rompopolo", image: "images/MHWilds-Chapter2-Rompopolo_Icon.png" },
+		{ name: "Guardian Arkveld", image: "images/MHWilds-Chapter3-Guardian_Arkveld_Icon.png" },
+		{ name: "Guardian Doshaguma", image: "images/MHWilds-Chapter3-Guardian_Doshaguma_Icon.png" },
+		{ name: "Guardian Ebony Odogaron", image: "images/MHWilds-Chapter3-Guardian_Ebony_Odogaron_Icon.png" },
+		{ name: "Guardian Rathalos", image: "images/MHWilds-Chapter3-Guardian_Rathalos_Icon.png" },
+		{ name: "Jin Dahaad", image: "images/MHWilds-Chapter3-Jin_Dahaad_Icon.png" },
+		{ name: "Xu Wu", image: "images/MHWilds-Chapter3-Xu_Wu_Icon.png" },
+		{ name: "Zoh Shia", image: "images/MHWilds-Chapter3-Zoh_Shia_Icon.png" },
+		{ name: "Arkveld", image: "images/MHWilds-Chapter4-Arkveld_Icon.png" },
+		{ name: "Blangonga", image: "images/MHWilds-Chapter4-Blangonga_Icon.png" },
+		{ name: "Gore Magala", image: "images/MHWilds-Chapter4-Gore_Magala_Icon.png" },
+		{ name: "Gravios", image: "images/MHWilds-Chapter4-Gravios_Icon.png" },
+		{ name: "Guardian Fulgur Anjanath", image: "images/MHWilds-Chapter4-Guardian_Fulgur_Anjanath_Icon.png" },
+		{ name: "Gypceros", image: "images/MHWilds-Chapter4-Gypceros_Icon.png" },
+		{ name: "Rathalos", image: "images/MHWilds-Chapter4-Rathalos_Icon.png" },
+		{ name: "Rathian", image: "images/MHWilds-Chapter4-Rathian_Icon.png" },
+		{ name: "Yian Kut-ku", image: "images/MHWilds-Chapter4-Yian_Kut-ku_Icon.png" },
+      ];
+
+      let currentMonsterIndex = 0;
+      let monstersHunted = JSON.parse(localStorage.getItem("monstersHunted")) || Array(monsters.length).fill(0);
+      const monsterNameElement = document.getElementById("monster-name");
+      const monsterIconElement = document.getElementById("monster-icon");
+      const counterElement = document.getElementById("counter");
+
+      function saveCounters() {
+        localStorage.setItem("monstersHunted", JSON.stringify(monstersHunted));
+      }
+
+      function changeMonster() {
+        const monster = monsters[currentMonsterIndex];
+        monsterNameElement.textContent = `${monster.name} Hunted`;
+        counterElement.textContent = currentMonsterIndex === 0
+          ? monstersHunted.slice(1).reduce((total, count) => total + count, 0)
+          : monstersHunted[currentMonsterIndex];
+        monsterIconElement.style.backgroundImage = `url(${monster.image})`;
+      }
+
+      function updateCounter() {
+        counterElement.textContent = currentMonsterIndex === 0
+          ? monstersHunted.slice(1).reduce((sum, count) => sum + count, 0)
+          : monstersHunted[currentMonsterIndex];
+        saveCounters();
+      }
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowLeft") {
+          currentMonsterIndex = (currentMonsterIndex - 1 + monsters.length) % monsters.length;
+          changeMonster();
+        } else if (event.key === "ArrowRight") {
+          currentMonsterIndex = (currentMonsterIndex + 1) % monsters.length;
+          changeMonster();
+        } else if (event.key === "ArrowUp" && currentMonsterIndex !== 0) {
+          monstersHunted[currentMonsterIndex]++;
+          updateCounter();
+        } else if (event.key === "ArrowDown" && currentMonsterIndex !== 0) {
+          if (monstersHunted[currentMonsterIndex] > 0) {
+            monstersHunted[currentMonsterIndex]--;
+            updateCounter();
+          }
+        } else if (event.key.toLowerCase() === "r" && currentMonsterIndex !== 0) {
+          monstersHunted[currentMonsterIndex] = 0;
+          updateCounter();
+        }
+      });
+
+      changeMonster();
+    </script>
+  </body>
+</html>
